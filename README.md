@@ -1,4 +1,4 @@
-Pet project to experiment with kafka, flink & cassandra
+Pet project to experiment with kafka, flink & cassandra and etc 
 
 ##### Connect to Cassandra Data in IntelliJ
 https://www.cdata.com/kb/tech/cassandra-jdbc-intellij.rst
