@@ -1,3 +1,5 @@
+youtube mini tutorial how to run the project through intellij idea https://youtu.be/IUtauUax86g
+
 Pet project to experiment with kafka, flink & cassandra and etc 
 
 ##### Connect to Cassandra Data in IntelliJ
