@@ -18,7 +18,7 @@ object Dependencies {
   lazy val cats = "org.typelevel" %% "cats-core" % catsVersion
   lazy val catsLaws = "org.typelevel" %% "cats-laws" % catsVersion
   lazy val catsTests = "org.typelevel" %% "cats-testkit" % catsVersion
-
+  
   lazy val circeVersion = "0.9.1"
   lazy val circe = Seq(
     "io.circe" %% "circe-core" % circeVersion,
