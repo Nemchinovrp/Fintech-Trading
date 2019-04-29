@@ -1,0 +1,71 @@
+version: '3'
+services:
+
+  websocket-server:
+    build: ./websocket-server/target/docker/stage
+    depends_on:
+      - kafka
+
+  websocket-client:
+    build: ./websocket-client-kafka/target/docker/stage
+    depends_on:
+      - kafka
+
+  flink-processor:
+    build: ./flink-processor/target/docker/stage
+    depends_on:
+      - kafka
+      - cassandra
+
+  rest-cassandra:
+    build: ./rest-cassandra/target/docker/stage
+    depends_on:
+      - cassandra
+    ports:
+      - "8077:8077"
+
+  spark-processor2:
+    build: ./spark-processor2/target/docker/stage
+    depends_on:
+      - kafka
+      - cassandra
+
+
+  kafka:
+    image: johnnypark/kafka-zookeeper
+    container_name: kafka
+    ports:
+      - "9092:9092"
+      - "2181:2181"
+    environment:
+      ADVERTISED_HOST: 127.0.0.1
+      ADVERTISED_PORT: 9092
+
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra
+    ports:
+      - "9042:9042"
+    restart: always
+    volumes:
+      - ./out/cassandra_data:/var/lib/cassandra
+
+  cassandra-load-keyspace:
+    container_name: cassandra-load-keyspace
+    image: cassandra:latest
+    depends_on:
+      - cassandra
+    volumes:
+      - ./flink-processor/src/main/resources/cassandra_schema.cql:/cassandra_schema.cql
+    command: /bin/bash -c "sleep 20 && echo loading cassandra keyspace && cqlsh cassandra -f /cassandra_schema.cql"
+
+#    deploy:
+#      restart_policy:
+#        condition: on-failure
+#        delay: 5s
+#        max_attempts: 3
+#        window: 120s
+
+# https://stackoverflow.com/questions/30063907/using-docker-compose-how-to-execute-multiple-commands
+# https://medium.freecodecamp.org/docker-entrypoint-cmd-dockerfile-best-practices-abc591c30e21
+# https://stackoverflow.com/questions/40443617/init-script-for-cassandra-with-docker-compose
